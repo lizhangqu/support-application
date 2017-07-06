@@ -99,7 +99,7 @@ public class ApplicationCompat {
     /**
      * 获取applicationContext
      *
-     * @return
+     * @return Context
      */
     public static Context getApplicationContext() {
         try {
