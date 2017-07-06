@@ -57,15 +57,15 @@ def getSnapshotRepositoryPassword() {
 }
 
 def getPomGroupId() {
-    return hasProperty('PROJECT_POM_GROUP') ? PROJECT_POM_GROUP : POM_GROUP
+    return hasProperty('POM_GROUP') ? POM_GROUP : readPropertyFromLocalProperties('POM_GROUP')
 }
 
 def getPomArtifactId() {
-    return hasProperty('PROJECT_POM_ARTIFACT_ID') ? PROJECT_POM_ARTIFACT_ID : POM_ARTIFACT_ID
+    return hasProperty('POM_ARTIFACT_ID') ? POM_ARTIFACT_ID : readPropertyFromLocalProperties('POM_ARTIFACT_ID')
 }
 
 def getPomVersion() {
-    return hasProperty('PROJECT_POM_VERSION') ? PROJECT_POM_VERSION : POM_VERSION
+    return hasProperty('POM_VERSION') ? POM_VERSION : readPropertyFromLocalProperties('POM_VERSION')
 }
 
 def getBintrayUser() {
@@ -76,19 +76,42 @@ def getBintrayKey() {
     return hasProperty('BINTRAY_APIKEY') ? BINTRAY_APIKEY : readPropertyFromLocalProperties('BINTRAY_APIKEY')
 }
 
-def groupId = getPomGroupId()
-def artifactId = getPomArtifactId()
-def version = getPomVersion()
+def getPomLicenses() {
+    return hasProperty('POM_LICENSES') ? POM_LICENSES : readPropertyFromLocalProperties('POM_LICENSES')
+}
+
+def getPomWebURL() {
+    return hasProperty('POM_WEBSITE_URL') ? POM_WEBSITE_URL : readPropertyFromLocalProperties('POM_WEBSITE_URL')
+}
+
+def getPomVCSURL() {
+    return hasProperty('POM_VCS_URL') ? POM_VCS_URL : readPropertyFromLocalProperties('POM_VCS_URL')
+}
+
+def getPomIssueURL() {
+    return hasProperty('POM_ISSUE_URL') ? POM_ISSUE_URL : readPropertyFromLocalProperties('POM_ISSUE_URL')
+}
+
+
+def pomGroupId = getPomGroupId()
+def pomArtifactId = getPomArtifactId()
+def pomVersion = getPomVersion()
+
+def pomLicenses = getPomLicenses()
+def pomWebsiteUrl = getPomWebURL()
+def pomVcsUrl = getPomVCSURL()
+def pomIssueUrl = getPomIssueURL()
+
 def bintrayUser = getBintrayUser()
-def bintrayKey = getBintrayUser()
+def bintrayKey = getBintrayKey()
 
 install {
     repositories {
         mavenInstaller {
             // This generates POM.xml with proper parameters
-            pom.groupId = groupId
-            pom.artifactId = artifactId
-            pom.version = version
+            pom.groupId = pomGroupId
+            pom.artifactId = pomArtifactId
+            pom.version = pomVersion
         }
     }
 }
@@ -97,9 +120,9 @@ install {
 uploadArchives {
     repositories {
         mavenDeployer {
-            pom.groupId = groupId
-            pom.artifactId = artifactId
-            pom.version = version
+            pom.groupId = pomGroupId
+            pom.artifactId = pomArtifactId
+            pom.version = pomVersion
 
             repository(url: getReleaseRepositoryUrl()) {
                 authentication(userName: getReleaseRepositoryUsername(), password: getReleaseRepositoryPassword())
@@ -116,25 +139,22 @@ task androidJavadocs(type: Javadoc) {
     ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
     classpath += files(ext.androidJar)
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    classpath += configurations.compile
-    classpath += configurations.provided
 
 }
 
-task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+task androidJavaDocsJar(type: Jar, dependsOn: androidJavadocs) {
     classifier = 'javadoc'
     from androidJavadocs.destinationDir
 }
 
 task androidSourcesJar(type: Jar) {
-    outputs.upToDateWhen { false }
     classifier = 'sources'
     from android.sourceSets.main.java.srcDirs
 }
 
 artifacts {
     archives androidSourcesJar
-//    archives androidJavadocsJar
+    archives androidJavaDocsJar
 }
 
 afterEvaluate { project ->
@@ -157,13 +177,13 @@ bintray {
 
     pkg {
         repo = 'maven'
-        name = "${groupId}:${artifactId}"
-//        licenses = BINTRAY_LICENCE
-//        vcsUrl = POM_SCM_URL
-//        websiteUrl = POM_URL
-//        issueTrackerUrl = POM_ISSUE_URL
-//        publicDownloadNumbers = true
-//        publish = true
+        name = "${pomGroupId}:${pomArtifactId}"
+        licenses = pomLicenses
+        websiteUrl = pomWebsiteUrl
+        vcsUrl = pomVcsUrl
+        issueTrackerUrl = pomIssueUrl
+        publicDownloadNumbers = true
+        publish = true
     }
 }
 
