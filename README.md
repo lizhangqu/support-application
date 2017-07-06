@@ -2,11 +2,15 @@
 
 support-application is a library which can get the information about the application like applicationContext, appName, versionName, versionCode, isDebugAble without context.
 
+### latest_version
+
+current latest_version is **0.0.1**
+
 #### gradle compile
 
 ```
 dependencies {
-    compile "com.android.support:support-application:${lates_version}"
+    compile "com.android.support:support-application:${latest_version}"
 }
 ```
 
@@ -16,7 +20,7 @@ dependencies {
 <dependency>
   <groupId>com.android.support</groupId>
   <artifactId>support-application</artifactId>
-  <version>${lates_version}</version>
+  <version>${latest_version}</version>
 </dependency>
 ```
 
