@@ -1,6 +1,7 @@
 package com.android.support.application.sample;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         String name = Thread.currentThread().getName();
                         Application application = ApplicationCompat.getApplication();
+                        Context context = ApplicationCompat.getApplicationContext();
                         String appName = ApplicationCompat.getAppName();
                         String versionName = ApplicationCompat.getVersionName();
                         int versionCode = ApplicationCompat.getVersionCode();
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.e("TAG", "threadName:" + name);
                         Log.e("TAG", "application:" + application);
+                        Log.e("TAG", "applicationContext:" + context);
                         Log.e("TAG", "appName:" + appName);
                         Log.e("TAG", "versionName:" + versionName);
                         Log.e("TAG", "versionCode:" + versionCode);
