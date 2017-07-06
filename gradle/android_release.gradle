@@ -104,9 +104,9 @@ def getPomDeveloperName() {
     return hasProperty('POM_DEVELOPER_NAME') ? POM_DEVELOPER_NAME : readPropertyFromLocalProperties('POM_DEVELOPER_NAME')
 }
 
-def pomGroupId = getPomGroupId()
-def pomArtifactId = getPomArtifactId()
-def pomVersion = getPomVersion()
+def group = getPomGroupId()
+def artifactId = getPomArtifactId()
+def version = getPomVersion()
 
 def pomLicense = getPomLicense()
 def pomLicenses = []
@@ -126,9 +126,9 @@ install {
         mavenInstaller {
             pom.project {
                 // This generates POM.xml with proper parameters
-                groupId = pomGroupId
-                artifactId = pomArtifactId
-                version = pomVersion
+                groupId = getPomGroupId()
+                artifactId = getPomArtifactId()
+                version = getPomVersion()
 
                 scm {
                     url pomVcsUrl
@@ -156,9 +156,9 @@ install {
 uploadArchives {
     repositories {
         mavenDeployer {
-            pom.groupId = pomGroupId
-            pom.artifactId = pomArtifactId
-            pom.version = pomVersion
+            pom.groupId = getPomGroupId()
+            pom.artifactId = getPomArtifactId()
+            pom.version = getPomVersion()
 
             repository(url: getReleaseRepositoryUrl()) {
                 authentication(userName: getReleaseRepositoryUsername(), password: getReleaseRepositoryPassword())
@@ -239,7 +239,7 @@ bintray {
 
     pkg {
         repo = 'maven'
-        name = "${pomGroupId}:${pomArtifactId}"
+        name = "${group}:${artifactId}"
         licenses = pomLicenses
         websiteUrl = pomWebsiteUrl
         vcsUrl = pomVcsUrl
