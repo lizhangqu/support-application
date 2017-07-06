@@ -76,8 +76,12 @@ def getBintrayKey() {
     return hasProperty('BINTRAY_APIKEY') ? BINTRAY_APIKEY : readPropertyFromLocalProperties('BINTRAY_APIKEY')
 }
 
-def getPomLicenses() {
-    return hasProperty('POM_LICENSES') ? POM_LICENSES : readPropertyFromLocalProperties('POM_LICENSES')
+def getPomLicense() {
+    return hasProperty('POM_LICENSE') ? POM_LICENSE : readPropertyFromLocalProperties('POM_LICENSE')
+}
+
+def getPomLicenseUrl() {
+    return hasProperty('POM_LICENSE_URL') ? POM_LICENSE_URL : readPropertyFromLocalProperties('POM_LICENSE_URL')
 }
 
 def getPomWebURL() {
@@ -92,15 +96,27 @@ def getPomIssueURL() {
     return hasProperty('POM_ISSUE_URL') ? POM_ISSUE_URL : readPropertyFromLocalProperties('POM_ISSUE_URL')
 }
 
+def getPomDeveloperID() {
+    return hasProperty('POM_DEVELOPER_ID') ? POM_DEVELOPER_ID : readPropertyFromLocalProperties('POM_DEVELOPER_ID')
+}
+
+def getPomDeveloperName() {
+    return hasProperty('POM_DEVELOPER_NAME') ? POM_DEVELOPER_NAME : readPropertyFromLocalProperties('POM_DEVELOPER_NAME')
+}
 
 def pomGroupId = getPomGroupId()
 def pomArtifactId = getPomArtifactId()
 def pomVersion = getPomVersion()
 
-def pomLicenses = getPomLicenses()
+def pomLicense = getPomLicense()
+def pomLicenses = []
+pomLicenses << pomLicense
+def pomLicenseUrl = getPomLicenseUrl()
 def pomWebsiteUrl = getPomWebURL()
 def pomVcsUrl = getPomVCSURL()
 def pomIssueUrl = getPomIssueURL()
+def pomDeveloperID = getPomDeveloperID()
+def pomDeveloperName = getPomDeveloperName()
 
 def bintrayUser = getBintrayUser()
 def bintrayKey = getBintrayKey()
@@ -108,10 +124,30 @@ def bintrayKey = getBintrayKey()
 install {
     repositories {
         mavenInstaller {
-            // This generates POM.xml with proper parameters
-            pom.groupId = pomGroupId
-            pom.artifactId = pomArtifactId
-            pom.version = pomVersion
+            pom.project {
+                // This generates POM.xml with proper parameters
+                groupId = pomGroupId
+                artifactId = pomArtifactId
+                version = pomVersion
+
+                scm {
+                    url pomVcsUrl
+                }
+
+                licenses {
+                    license {
+                        name pomLicense
+                        url pomLicenseUrl
+                    }
+                }
+
+                developers {
+                    developer {
+                        id pomDeveloperID
+                        name pomDeveloperName
+                    }
+                }
+            }
         }
     }
 }
@@ -130,6 +166,32 @@ uploadArchives {
             snapshotRepository(url: getSnapshotRepositoryUrl()) {
                 authentication(userName: getSnapshotRepositoryUsername(), password: getSnapshotRepositoryPassword())
             }
+
+            pom.project {
+                name pomArtifactId
+                packaging "pom"
+                description "android library"
+                url pomWebsiteUrl
+
+                scm {
+                    url pomVcsUrl
+                }
+
+                licenses {
+                    license {
+                        name pomLicense
+                        url pomLicenseUrl
+                    }
+                }
+
+                developers {
+                    developer {
+                        id pomDeveloperID
+                        name pomDeveloperName
+                    }
+                }
+            }
+
         }
     }
 }
