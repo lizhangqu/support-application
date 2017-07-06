@@ -2,6 +2,7 @@ package com.android.support.application;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -93,6 +94,20 @@ public class ApplicationCompat {
                 LOCK.notify();
             }
         }
+    }
+
+    /**
+     * 获取applicationContext
+     *
+     * @return
+     */
+    public static Context getApplicationContext() {
+        try {
+            return getApplication().getApplicationContext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
