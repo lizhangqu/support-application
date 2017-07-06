@@ -1,5 +1,6 @@
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
@@ -67,10 +68,19 @@ def getPomVersion() {
     return hasProperty('PROJECT_POM_VERSION') ? PROJECT_POM_VERSION : POM_VERSION
 }
 
+def getBintrayUser() {
+    return hasProperty('BINTRAY_USER') ? BINTRAY_USER : readPropertyFromLocalProperties('BINTRAY_USER')
+}
+
+def getBintrayKey() {
+    return hasProperty('BINTRAY_APIKEY') ? BINTRAY_APIKEY : readPropertyFromLocalProperties('BINTRAY_APIKEY')
+}
+
 def groupId = getPomGroupId()
 def artifactId = getPomArtifactId()
 def version = getPomVersion()
-
+def bintrayUser = getBintrayUser()
+def bintrayKey = getBintrayUser()
 
 install {
     repositories {
@@ -133,6 +143,27 @@ afterEvaluate { project ->
         if (task.name.equalsIgnoreCase('install')) {
             task.setGroup("maven")
         }
+        //for bintrayUpload
+        if (task.name.equalsIgnoreCase('bintrayUpload')) {
+            task.dependsOn tasks.getByName('install')
+        }
+    }
+}
+
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    configurations = ['archives']
+
+    pkg {
+        repo = 'maven'
+        name = "${groupId}:${artifactId}"
+//        licenses = BINTRAY_LICENCE
+//        vcsUrl = POM_SCM_URL
+//        websiteUrl = POM_URL
+//        issueTrackerUrl = POM_ISSUE_URL
+//        publicDownloadNumbers = true
+//        publish = true
     }
 }
 
