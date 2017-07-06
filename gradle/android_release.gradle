@@ -108,8 +108,6 @@ version = getPomVersion()
 group = getPomGroupId()
 
 def pomLicense = getPomLicense()
-def pomLicenses = []
-pomLicenses << pomLicense
 def pomLicenseUrl = getPomLicenseUrl()
 def pomWebsiteUrl = getPomWebURL()
 def pomVcsUrl = getPomVCSURL()
@@ -239,7 +237,7 @@ bintray {
     pkg {
         repo = 'maven'
         name = getPomArtifactId()
-        licenses = pomLicenses
+        licenses = [pomLicense]
         websiteUrl = pomWebsiteUrl
         vcsUrl = pomVcsUrl
         issueTrackerUrl = pomIssueUrl
