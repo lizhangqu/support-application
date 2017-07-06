@@ -8,8 +8,6 @@ support-application is a library which can get the information about the applica
 [ ![Download](https://api.bintray.com/packages/lizhangqu/maven/support-application/images/download.svg) ](https://bintray.com/lizhangqu/maven/support-application/_latestVersion)
 
 #### changelog
----------
-
 
 See details in [CHANGELOG](https://github.com/lizhangqu/support-application/blob/master/CHANGELOG.md).
 
