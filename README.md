@@ -2,9 +2,11 @@
 
 support-application is a library which can get the information about the application like applicationContext, appName, versionName, versionCode, isDebugAble without context.
 
+
 #### latest_version
 
-current latest_version is **0.0.1**
+current latest_version is [ ![Download](https://api.bintray.com/packages/lizhangqu/maven/com.android.support:support-application/images/download.svg) ](https://bintray.com/lizhangqu/maven/com.android.support:support-application/_latestVersion)
+
 
 #### gradle compile
 
