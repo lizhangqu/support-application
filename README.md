@@ -61,3 +61,7 @@ int versionCode = ApplicationCompat.getVersionCode();
 ```
 boolean isDebugAble = ApplicationCompat.isDebugAble();
 ```
+
+### License
+
+support-application is under the BSD license. See the [LICENSE](https://github.com/lizhangqu/support-application/blob/master/LICENSE) file for details.
