@@ -22,3 +22,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile "junit:junit:${global_junitVersion}"
 }
+
+apply from: project.rootProject.file('gradle/android_release.gradle')

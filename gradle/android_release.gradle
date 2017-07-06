@@ -1,0 +1,142 @@
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.github.dcendents.android-maven'
+
+android {
+    compileOptions {
+        sourceCompatibility rootProject.ext.global_javaVersion
+        targetCompatibility rootProject.ext.global_javaVersion
+    }
+}
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+def isReleaseBuild() {
+    return version.contains("SNAPSHOT") == false
+}
+
+def readPropertyFromLocalProperties(String key) {
+    Properties properties = new Properties()
+    try {
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    } catch (Exception e) {
+        println("load local properties failed msg:${e.message}")
+    }
+    return properties.getProperty(key)
+}
+
+def getReleaseRepositoryUrl() {
+    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL : readPropertyFromLocalProperties('RELEASE_REPOSITORY_URL')
+}
+
+def getSnapshotRepositoryUrl() {
+    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL : readPropertyFromLocalProperties('SNAPSHOT_REPOSITORY_URL')
+}
+
+def getReleaseRepositoryUsername() {
+    return hasProperty('RELEASE_REPOSITORY_USERNAME') ? RELEASE_REPOSITORY_USERNAME : readPropertyFromLocalProperties('RELEASE_REPOSITORY_USERNAME')
+}
+
+def getReleaseRepositoryPassword() {
+    return hasProperty('RELEASE_REPOSITORY_PASSWORD') ? RELEASE_REPOSITORY_PASSWORD : readPropertyFromLocalProperties('RELEASE_REPOSITORY_PASSWORD')
+}
+
+def getSnapshotRepositoryUsername() {
+    return hasProperty('SNAPSHOT_REPOSITORY_USERNAME') ? SNAPSHOT_REPOSITORY_USERNAME : readPropertyFromLocalProperties('SNAPSHOT_REPOSITORY_USERNAME')
+}
+
+def getSnapshotRepositoryPassword() {
+    return hasProperty('SNAPSHOT_REPOSITORY_PASSWORD') ? SNAPSHOT_REPOSITORY_PASSWORD : readPropertyFromLocalProperties('SNAPSHOT_REPOSITORY_PASSWORD')
+}
+
+def getPomGroupId() {
+    return hasProperty('PROJECT_POM_GROUP') ? PROJECT_POM_GROUP : POM_GROUP
+}
+
+def getPomArtifactId() {
+    return hasProperty('PROJECT_POM_ARTIFACT_ID') ? PROJECT_POM_ARTIFACT_ID : POM_ARTIFACT_ID
+}
+
+def getPomVersion() {
+    return hasProperty('PROJECT_POM_VERSION') ? PROJECT_POM_VERSION : POM_VERSION
+}
+
+def groupId = getPomGroupId()
+def artifactId = getPomArtifactId()
+def version = getPomVersion()
+
+
+install {
+    repositories {
+        mavenInstaller {
+            // This generates POM.xml with proper parameters
+            pom.groupId = groupId
+            pom.artifactId = artifactId
+            pom.version = version
+        }
+    }
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = groupId
+            pom.artifactId = artifactId
+            pom.version = version
+
+            repository(url: getReleaseRepositoryUrl()) {
+                authentication(userName: getReleaseRepositoryUsername(), password: getReleaseRepositoryPassword())
+            }
+            snapshotRepository(url: getSnapshotRepositoryUrl()) {
+                authentication(userName: getSnapshotRepositoryUsername(), password: getSnapshotRepositoryPassword())
+            }
+        }
+    }
+}
+
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+    classpath += files(ext.androidJar)
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+    classpath += configurations.provided
+
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    outputs.upToDateWhen { false }
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives androidSourcesJar
+//    archives androidJavadocsJar
+}
+
+afterEvaluate { project ->
+    tasks.all { Task task ->
+        //重新设置group
+        if (task.name.equalsIgnoreCase('install')) {
+            task.setGroup("maven")
+        }
+    }
+}
+
+//install to local and upload to remote
+task installAndUpload(dependsOn: ['install', 'uploadArchives']) {
+    group = 'maven'
+}
