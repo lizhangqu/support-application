@@ -1,0 +1,27 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion global_compileSdkVersion
+    buildToolsVersion global_buildToolsVersion
+    defaultConfig {
+        applicationId "com.android.support.application.sample"
+        minSdkVersion global_minSdkVersion
+        targetSdkVersion global_targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:appcompat-v7:${global_androidSupportVersion}"
+    compile "com.android.support.constraint:constraint-layout:${global_androidConstraintLayoutVersion}"
+    testCompile "junit:junit:${global_junitVersion}"
+    compile project(":library")
+}
