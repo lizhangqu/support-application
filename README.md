@@ -5,7 +5,7 @@ support-application is a library which can get the information about the applica
 
 #### latest_version
 
-current latest_version is [ ![Download](https://api.bintray.com/packages/lizhangqu/maven/support-application/images/download.svg) ](https://bintray.com/lizhangqu/maven/support-application/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/lizhangqu/maven/support-application/images/download.svg) ](https://bintray.com/lizhangqu/maven/support-application/_latestVersion)
 
 
 #### gradle compile
