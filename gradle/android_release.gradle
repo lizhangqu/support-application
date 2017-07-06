@@ -167,7 +167,7 @@ uploadArchives {
             }
 
             pom.project {
-                name "${getPomGroupId()}:${getPomArtifactId()}"
+                name getPomArtifactId()
                 packaging "pom"
                 description "android library"
                 url pomWebsiteUrl
@@ -238,7 +238,7 @@ bintray {
 
     pkg {
         repo = 'maven'
-        name = "${getPomGroupId()}:${getPomArtifactId()}"
+        name = getPomArtifactId()
         licenses = pomLicenses
         websiteUrl = pomWebsiteUrl
         vcsUrl = pomVcsUrl
