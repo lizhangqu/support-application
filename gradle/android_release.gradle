@@ -104,9 +104,8 @@ def getPomDeveloperName() {
     return hasProperty('POM_DEVELOPER_NAME') ? POM_DEVELOPER_NAME : readPropertyFromLocalProperties('POM_DEVELOPER_NAME')
 }
 
-def group = getPomGroupId()
-def artifactId = getPomArtifactId()
-def version = getPomVersion()
+version = getPomVersion()
+group = getPomGroupId()
 
 def pomLicense = getPomLicense()
 def pomLicenses = []
@@ -168,7 +167,7 @@ uploadArchives {
             }
 
             pom.project {
-                name pomArtifactId
+                name "${getPomGroupId()}:${getPomArtifactId()}"
                 packaging "pom"
                 description "android library"
                 url pomWebsiteUrl
@@ -239,7 +238,7 @@ bintray {
 
     pkg {
         repo = 'maven'
-        name = "${group}:${artifactId}"
+        name = "${getPomGroupId()}:${getPomArtifactId()}"
         licenses = pomLicenses
         websiteUrl = pomWebsiteUrl
         vcsUrl = pomVcsUrl
