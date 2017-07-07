@@ -118,7 +118,7 @@ public class LifecycleCompat implements Application.ActivityLifecycleCallbacks {
 
     private static class SingletonHolder {
         @SuppressLint("StaticFieldLeak")
-        private static LifecycleCompat instance = new LifecycleCompat();
+        private static final LifecycleCompat INSTANCE = new LifecycleCompat();
     }
 
     private LifecycleCompat() {
@@ -130,7 +130,7 @@ public class LifecycleCompat implements Application.ActivityLifecycleCallbacks {
     }
 
     public static LifecycleCompat getInstance() {
-        return SingletonHolder.instance;
+        return SingletonHolder.INSTANCE;
     }
 
     public void onApplicationCreate(Application application) {
