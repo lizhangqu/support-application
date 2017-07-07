@@ -23,4 +23,4 @@ dependencies {
     testCompile "junit:junit:${global_junitVersion}"
 }
 
-apply from: project.rootProject.file('gradle/android_release.gradle')
+apply from: project.rootProject.file('gradle/artifact_release.gradle')
