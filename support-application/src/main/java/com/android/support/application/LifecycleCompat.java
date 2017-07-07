@@ -242,10 +242,6 @@ public class LifecycleCompat implements Application.ActivityLifecycleCallbacks {
                         this.mActivityLifecycleCallback.onStopped(activity);
                     } else if ("onDestroyed".equals(this.name)) {
                         this.mActivityLifecycleCallback.onDestroyed(activity);
-                    } else if ("onResumed".equals(this.name)) {
-                        this.mActivityLifecycleCallback.onResumed(activity);
-                    } else if ("onPaused".equals(this.name)) {
-                        this.mActivityLifecycleCallback.onPaused(activity);
                     }
                 }
             }
