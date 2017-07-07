@@ -19,3 +19,9 @@ version 0.0.3
 -------------
 
  - fix get currentActivityThread bug in android 4.1 with worker thread
+ 
+ 
+version 0.0.4
+-------------
+
+ - modify method isDebugAble to isDebuggable
