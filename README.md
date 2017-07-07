@@ -82,7 +82,7 @@ int versionCode = ApplicationCompat.getVersionCode();
 **Debuggable Or Not**
 
 ```
-boolean isDebugAble = ApplicationCompat.isDebuggable();
+boolean isDebuggable = ApplicationCompat.isDebuggable();
 ```
 
 ### License
