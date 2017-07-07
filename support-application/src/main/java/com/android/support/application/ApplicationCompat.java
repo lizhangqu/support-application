@@ -35,6 +35,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Process;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -232,6 +233,14 @@ public class ApplicationCompat {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * kill process
+     */
+    public static void killProcess() {
+        int myPid = android.os.Process.myPid();
+        Process.killProcess(myPid);
     }
 
 }
