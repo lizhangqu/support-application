@@ -1,6 +1,7 @@
 package com.android.support.application.sample;
 
 import android.app.Application;
+import android.content.Context;
 
 /**
  * 功能介绍
@@ -12,7 +13,52 @@ import android.app.Application;
 public class App extends Application {
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        //can't use it here
+
+//        String name = Thread.currentThread().getName();
+//        Application application = ApplicationCompat.getApplication();
+//        Context context = ApplicationCompat.getApplicationContext();
+//        ClassLoader classLoader = ApplicationCompat.getClassLoader();
+//        String appName = ApplicationCompat.getAppName();
+//        String versionName = ApplicationCompat.getVersionName();
+//        int versionCode = ApplicationCompat.getVersionCode();
+//        boolean isDebugAble = ApplicationCompat.isDebugAble();
+//
+//        Log.e("TAG", "threadName:" + name);
+//        Log.e("TAG", "application:" + application);
+//        Log.e("TAG", "applicationContext:" + context);
+//        Log.e("TAG", "classLoader:" + classLoader);
+//        Log.e("TAG", "appName:" + appName);
+//        Log.e("TAG", "versionName:" + versionName);
+//        Log.e("TAG", "versionCode:" + versionCode);
+//        Log.e("TAG", "isDebugAble:" + isDebugAble);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
+
+        //this is ok
+
+//        String name = Thread.currentThread().getName();
+//        Application application = ApplicationCompat.getApplication();
+//        Context context = ApplicationCompat.getApplicationContext();
+//        ClassLoader classLoader = ApplicationCompat.getClassLoader();
+//        String appName = ApplicationCompat.getAppName();
+//        String versionName = ApplicationCompat.getVersionName();
+//        int versionCode = ApplicationCompat.getVersionCode();
+//        boolean isDebugAble = ApplicationCompat.isDebugAble();
+//
+//        Log.e("TAG", "threadName:" + name);
+//        Log.e("TAG", "application:" + application);
+//        Log.e("TAG", "applicationContext:" + context);
+//        Log.e("TAG", "classLoader:" + classLoader);
+//        Log.e("TAG", "appName:" + appName);
+//        Log.e("TAG", "versionName:" + versionName);
+//        Log.e("TAG", "versionCode:" + versionCode);
+//        Log.e("TAG", "isDebugAble:" + isDebugAble);
     }
 }

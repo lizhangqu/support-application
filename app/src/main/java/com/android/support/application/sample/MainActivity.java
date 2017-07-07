@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
                         String name = Thread.currentThread().getName();
                         Application application = ApplicationCompat.getApplication();
                         Context context = ApplicationCompat.getApplicationContext();
+                        ClassLoader classLoader = ApplicationCompat.getClassLoader();
                         String appName = ApplicationCompat.getAppName();
                         String versionName = ApplicationCompat.getVersionName();
                         int versionCode = ApplicationCompat.getVersionCode();
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("TAG", "threadName:" + name);
                         Log.e("TAG", "application:" + application);
                         Log.e("TAG", "applicationContext:" + context);
+                        Log.e("TAG", "classLoader:" + classLoader);
                         Log.e("TAG", "appName:" + appName);
                         Log.e("TAG", "versionName:" + versionName);
                         Log.e("TAG", "versionCode:" + versionCode);

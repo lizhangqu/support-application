@@ -41,7 +41,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * application获取辅助类
+ * application获取辅助类，只能在application的attachBaseContext之后使用
  *
  * @author lizhangqu
  * @version V1.0
@@ -51,35 +51,6 @@ public class ApplicationCompat {
     private static final Object LOCK = new Object();
     @SuppressLint("StaticFieldLeak")
     private static Application sApplication;
-
-    /**
-     * 返回全局Application
-     *
-     * @return Application
-     */
-    public static Application getApplication() {
-        if (sApplication != null) {
-            return sApplication;
-        }
-        synchronized (ApplicationCompat.class) {
-            try {
-                if (sApplication == null) {
-                    sApplication = getSystemApp();
-                    if (sApplication == null && Thread.currentThread().getId() != Looper.getMainLooper().getThread().getId()) {
-                        synchronized (LOCK) {
-                            //主线程直接获取
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            handler.post(new ApplicationGetter());
-                            LOCK.wait();
-                        }
-                    }
-                }
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-        }
-        return sApplication;
-    }
 
     /**
      * 获得Application
@@ -124,6 +95,35 @@ public class ApplicationCompat {
     }
 
     /**
+     * 返回全局Application
+     *
+     * @return Application
+     */
+    public static Application getApplication() {
+        if (sApplication != null) {
+            return sApplication;
+        }
+        synchronized (ApplicationCompat.class) {
+            try {
+                if (sApplication == null) {
+                    sApplication = getSystemApp();
+                    if (sApplication == null && Thread.currentThread().getId() != Looper.getMainLooper().getThread().getId()) {
+                        synchronized (LOCK) {
+                            //主线程直接获取
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            handler.post(new ApplicationGetter());
+                            LOCK.wait();
+                        }
+                    }
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
+        return sApplication;
+    }
+
+    /**
      * 获取applicationContext
      *
      * @return Context
@@ -131,6 +131,20 @@ public class ApplicationCompat {
     public static Context getApplicationContext() {
         try {
             return getApplication().getApplicationContext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 返回classloader, 不进行缓存
+     *
+     * @return ClassLoader
+     */
+    public static ClassLoader getClassLoader() {
+        try {
+            return getApplication().getClassLoader();
         } catch (Exception e) {
             e.printStackTrace();
         }
