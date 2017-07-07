@@ -14,3 +14,8 @@ version 0.0.2
 -------------
 
  - support getClassLoader
+
+version 0.0.3
+-------------
+
+ - fix get currentActivityThread bug in android 4.1 with worker thread

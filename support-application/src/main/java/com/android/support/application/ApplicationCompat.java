@@ -70,6 +70,7 @@ public class ApplicationCompat {
         declaredField.setAccessible(true);
         Object currentActivityThread = declaredMethod.invoke(null);
         if (currentActivityThread == null && Thread.currentThread().getId() != Looper.getMainLooper().getThread().getId()) {
+            //it is in thread local, using main thread to get it
             throw new NotMainThreadLocalException("you should get it from main thread");
         }
         Object object = declaredField.get(currentActivityThread);
