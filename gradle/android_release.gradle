@@ -3,13 +3,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
-android {
-    compileOptions {
-        sourceCompatibility rootProject.ext.global_javaVersion
-        targetCompatibility rootProject.ext.global_javaVersion
-    }
-}
-
+//compatible for java 8
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
         tasks.withType(Javadoc) {
@@ -18,10 +12,12 @@ if (JavaVersion.current().isJava8Compatible()) {
     }
 }
 
+//whether contains snapshot in version
 def isReleaseBuild() {
     return version.contains("SNAPSHOT") == false
 }
 
+//read form root project local.properties
 def readPropertyFromLocalProperties(String key) {
     Properties properties = new Properties()
     try {
@@ -32,6 +28,7 @@ def readPropertyFromLocalProperties(String key) {
     return properties.getProperty(key)
 }
 
+//get the value from gradle.properties, project.ext{} or local.properties
 def getReleaseRepositoryUrl() {
     return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL : readPropertyFromLocalProperties('RELEASE_REPOSITORY_URL')
 }
@@ -104,9 +101,11 @@ def getPomDeveloperName() {
     return hasProperty('POM_DEVELOPER_NAME') ? POM_DEVELOPER_NAME : readPropertyFromLocalProperties('POM_DEVELOPER_NAME')
 }
 
+//must specific the version and group, and can't use def
 version = getPomVersion()
 group = getPomGroupId()
 
+//pom config
 def pomLicense = getPomLicense()
 def pomLicenseUrl = getPomLicenseUrl()
 def pomWebsiteUrl = getPomWebURL()
@@ -115,9 +114,11 @@ def pomIssueUrl = getPomIssueURL()
 def pomDeveloperID = getPomDeveloperID()
 def pomDeveloperName = getPomDeveloperName()
 
+//bintray username and key
 def bintrayUser = getBintrayUser()
 def bintrayKey = getBintrayKey()
 
+//install to local config
 install {
     repositories {
         mavenInstaller {
@@ -126,6 +127,9 @@ install {
                 groupId = getPomGroupId()
                 artifactId = getPomArtifactId()
                 version = getPomVersion()
+
+                name getPomArtifactId()
+                url pomWebsiteUrl
 
                 scm {
                     url pomVcsUrl
@@ -149,7 +153,7 @@ install {
     }
 }
 
-
+//uploadArchives config
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -166,8 +170,6 @@ uploadArchives {
 
             pom.project {
                 name getPomArtifactId()
-                packaging "pom"
-                description "android library"
                 url pomWebsiteUrl
 
                 scm {
@@ -193,42 +195,80 @@ uploadArchives {
     }
 }
 
-task androidJavadocs(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-    classpath += files(ext.androidJar)
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-
+//force Java/JavaDoc encode with UTF-8
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }
 
-task androidJavaDocsJar(type: Jar, dependsOn: androidJavadocs) {
-    classifier = 'javadoc'
-    from androidJavadocs.destinationDir
-}
+// Android libraries
+if (project.hasProperty("android")) {
+    task androidJavadocs(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+        classpath += files(ext.androidJar)
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 
-task androidSourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
+    }
 
-artifacts {
-    archives androidSourcesJar
-    archives androidJavaDocsJar
+    task androidJavaDocsJar(type: Jar, dependsOn: androidJavadocs) {
+        classifier = 'javadoc'
+        from androidJavadocs.getDestinationDir()
+    }
+
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+    }
+
+    artifacts {
+        archives androidSourcesJar, androidJavaDocsJar
+    }
+} else {
+    task javaSourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javaDocJar(type: Jar, dependsOn: Javadoc) {
+        classifier = 'javadoc'
+        from javaDoc.getDestinationDir()
+    }
+
+    artifacts {
+        archives javaSourcesJar, javaDocJar
+    }
+
 }
 
 afterEvaluate { project ->
-    tasks.all { Task task ->
-        //重新设置group
-        if (task.name.equalsIgnoreCase('install')) {
-            task.setGroup("maven")
-        }
-        //for bintrayUpload
-        if (task.name.equalsIgnoreCase('bintrayUpload')) {
-            task.dependsOn tasks.getByName('install')
-        }
+
+    def installTask = project.tasks.findByName("install")
+    def uploadArchivesTask = project.tasks.findByName("uploadArchives")
+    def bintrayUploadTask = project.tasks.findByName("bintrayUpload")
+
+    if (installTask) {
+        //reset install task group form other to maven
+        installTask.group = 'maven'
+    }
+    if (uploadArchivesTask) {
+        //reset uploadArchives task group form other to maven
+        uploadArchivesTask.group = 'maven'
+    }
+
+    if (installTask && uploadArchivesTask) {
+        def installAndUploadTask = project.task("installAndUpload")
+        installAndUploadTask.dependsOn installTask, uploadArchivesTask
+        installAndUploadTask.group = 'maven'
+    }
+    if (bintrayUploadTask && installTask) {
+        //let's bintrayUpload depensOn install
+        bintrayUploadTask.dependsOn installTask
+        //reset bintrayUpload task group form other to maven
+        bintrayUploadTask.group = 'maven'
     }
 }
 
+//bintray config
 bintray {
     user = bintrayUser
     key = bintrayKey
@@ -246,7 +286,4 @@ bintray {
     }
 }
 
-//install to local and upload to remote
-task installAndUpload(dependsOn: ['install', 'uploadArchives']) {
-    group = 'maven'
-}
+
