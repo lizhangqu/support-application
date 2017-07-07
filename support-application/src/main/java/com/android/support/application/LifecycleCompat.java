@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version V1.0
  * @since 2017-07-07 15:26
  */
-public class LifecycleCompat implements Application.ActivityLifecycleCallbacks {
+public class LifecycleCompat {
     public static final String ACTION_ACTIVITY_LIST_CHANGED = "com.android.support.application.ACTIVITY_LIST_CHANGED";
     public static final String ACTION_APPLICATION_LIFECYCLE_CHANGED = "com.android.support.application.APP_LIFECYCLE_CHANGED";
     public static final String EXTRA_ACTIVITY_COUNT = "activity_count";
@@ -76,65 +76,69 @@ public class LifecycleCompat implements Application.ActivityLifecycleCallbacks {
         void onStopped(Activity activity);
     }
 
-    @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        WeakReference<Activity> weakReference = new WeakReference<>(activity);
-        this.addActivity(activity);
-        if (this.mCreationCount.getAndIncrement() == 0 && !this.mActivityLifecycleCallbacks.isEmpty()) {
-            this.mFirstActivity = weakReference;
-            for (LifecycleCallback onCreated : this.mActivityLifecycleCallbacks) {
-                onCreated.onCreated(activity);
-            }
-        }
-    }
 
-    @Override
-    public void onActivityStarted(Activity activity) {
-        if (this.mStartCount.getAndIncrement() == 0) {
-            this.sendApplicationLifeCycle(false);
-            if (!this.mActivityLifecycleCallbacks.isEmpty()) {
-                for (LifecycleCallback onStarted : this.mActivityLifecycleCallbacks) {
-                    onStarted.onStarted(activity);
+    private static class ActivityLifecycleCallbacksCompatImpl implements Application.ActivityLifecycleCallbacks {
+        @Override
+        public final void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            WeakReference<Activity> weakReference = new WeakReference<>(activity);
+            LifecycleCompat.getInstance().addActivity(activity);
+            if (LifecycleCompat.getInstance().mCreationCount.getAndIncrement() == 0 && !LifecycleCompat.getInstance().mActivityLifecycleCallbacks.isEmpty()) {
+                LifecycleCompat.getInstance().mFirstActivity = weakReference;
+                for (LifecycleCallback onCreated : LifecycleCompat.getInstance().mActivityLifecycleCallbacks) {
+                    onCreated.onCreated(activity);
                 }
             }
         }
-    }
 
-    @Override
-    public void onActivityStopped(Activity activity) {
-        if (this.mStartCount.decrementAndGet() == 0) {
-            this.sendApplicationLifeCycle(true);
-            if (!this.mActivityLifecycleCallbacks.isEmpty()) {
-                for (LifecycleCallback onStopped : this.mActivityLifecycleCallbacks) {
-                    onStopped.onStopped(activity);
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (LifecycleCompat.getInstance().mStartCount.getAndIncrement() == 0) {
+                LifecycleCompat.getInstance().sendApplicationLifeCycle(false);
+                if (!LifecycleCompat.getInstance().mActivityLifecycleCallbacks.isEmpty()) {
+                    for (LifecycleCallback onStarted : LifecycleCompat.getInstance().mActivityLifecycleCallbacks) {
+                        onStarted.onStarted(activity);
+                    }
                 }
             }
         }
-    }
 
-    @Override
-    public void onActivityDestroyed(Activity activity) {
-        this.removeActivity(activity);
-        if (this.mCreationCount.decrementAndGet() == 0 && !this.mActivityLifecycleCallbacks.isEmpty()) {
-            for (LifecycleCallback onDestroyed : this.mActivityLifecycleCallbacks) {
-                onDestroyed.onDestroyed(activity);
+        @Override
+        public void onActivityStopped(Activity activity) {
+            if (LifecycleCompat.getInstance().mStartCount.decrementAndGet() == 0) {
+                LifecycleCompat.getInstance().sendApplicationLifeCycle(true);
+                if (!LifecycleCompat.getInstance().mActivityLifecycleCallbacks.isEmpty()) {
+                    for (LifecycleCallback onStopped : LifecycleCompat.getInstance().mActivityLifecycleCallbacks) {
+                        onStopped.onStopped(activity);
+                    }
+                }
             }
         }
-    }
 
-    @Override
-    public void onActivityResumed(Activity activity) {
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            LifecycleCompat.getInstance().removeActivity(activity);
+            if (LifecycleCompat.getInstance().mCreationCount.decrementAndGet() == 0 && !LifecycleCompat.getInstance().mActivityLifecycleCallbacks.isEmpty()) {
+                for (LifecycleCallback onDestroyed : LifecycleCompat.getInstance().mActivityLifecycleCallbacks) {
+                    onDestroyed.onDestroyed(activity);
+                }
+            }
+        }
 
-    }
+        @Override
+        public void onActivityResumed(Activity activity) {
 
-    @Override
-    public void onActivityPaused(Activity activity) {
+        }
 
-    }
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
 
 
-    @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
 
     }
 
@@ -158,7 +162,7 @@ public class LifecycleCompat implements Application.ActivityLifecycleCallbacks {
 
     public void onApplicationCreate(Application application) {
         this.mApplication = application;
-        application.registerActivityLifecycleCallbacks(this);
+        application.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacksCompatImpl());
     }
 
     public synchronized void registerActivityLifecycleCallback(LifecycleCallback activityLifecycleCallback) {
