@@ -20,6 +20,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
     compile "com.android.support:appcompat-v7:${global_androidSupportVersion}"
     compile "com.android.support.constraint:constraint-layout:${global_androidConstraintLayoutVersion}"
     testCompile "junit:junit:${global_junitVersion}"

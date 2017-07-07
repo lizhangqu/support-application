@@ -26,6 +26,7 @@ To run the sample application, simply clone this repository and use android stud
 
 ```
 dependencies {
+    //noinspection GradleCompatible
     compile "com.android.support:support-application:${latest_version}"
 }
 ```
