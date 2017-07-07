@@ -3,16 +3,26 @@
 support-application is a library which can get the information about the application like applicationContext, appName, versionName, versionCode, isDebugAble without context.
 
 
-#### latest_version
-
-[ ![Download](https://api.bintray.com/packages/lizhangqu/maven/support-application/images/download.svg) ](https://bintray.com/lizhangqu/maven/support-application/_latestVersion)
-
-#### changelog
+### Changelog
 
 See details in [CHANGELOG](https://github.com/lizhangqu/support-application/blob/master/CHANGELOG.md).
 
+### Examples
 
-#### gradle compile
+I have provided a sample.
+
+See sample [here on Github](https://github.com/lizhangqu/support-application/tree/master/app).
+
+To run the sample application, simply clone this repository and use android studio to compile, install it on a connected device.
+
+### Usage
+
+**Latest Version**
+
+[ ![Download](https://api.bintray.com/packages/lizhangqu/maven/support-application/images/download.svg) ](https://bintray.com/lizhangqu/maven/support-application/_latestVersion)
+
+
+**Gradle**
 
 ```
 dependencies {
@@ -20,47 +30,55 @@ dependencies {
 }
 ```
 
-#### maven compile
+**Maven**
 
 ```
-<dependency>
-  <groupId>com.android.support</groupId>
-  <artifactId>support-application</artifactId>
-  <version>${latest_version}</version>
-</dependency>
+<dependencies>
+    <dependency>
+      <groupId>com.android.support</groupId>
+      <artifactId>support-application</artifactId>
+      <version>${latest_version}</version>
+    </dependency>
+</dependencies>
 ```
 
-#### get application
+**Get Application**
 
 ```
 Application application = ApplicationCompat.getApplication();                   
 ```
 
-#### get application context
+**Get Application Context**
 
 ```
 Context context = ApplicationCompat.getApplicationContext();                   
 ```
 
-#### get the apk appName
+**Get Classloader**
+
+```
+ClassLoader classLoader = ApplicationCompat.getClassLoader();              
+```
+
+**Get The Apk AppName**
 
 ```
 String appName = ApplicationCompat.getAppName();
 ```
 
-#### get the apk versionName
+**Get The Apk VersionName**
 
 ```
 String versionName = ApplicationCompat.getVersionName();
 ```
 
-#### get the apk versionCode
+**Get The Apk VersionCode**
 
 ```
 int versionCode = ApplicationCompat.getVersionCode();
 ```
 
-#### judge whether the apk can debug or not
+**DebugAble Or Not**
 
 ```
 boolean isDebugAble = ApplicationCompat.isDebugAble();

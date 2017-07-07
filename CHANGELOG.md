@@ -8,3 +8,9 @@ version 0.0.1
  - support getVersionName
  - support getVersionCode
  - support isDebugAble
+ 
+
+version 0.0.2
+-------------
+
+ - support getClassLoader
