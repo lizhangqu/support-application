@@ -28,6 +28,7 @@
 package com.android.support.application;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -40,6 +41,7 @@ import android.os.Process;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * application获取辅助类，只能在application的attachBaseContext之后使用
@@ -241,6 +243,32 @@ public class ApplicationCompat {
     public static void killProcess() {
         int myPid = android.os.Process.myPid();
         Process.killProcess(myPid);
+    }
+
+    /**
+     * 是否是主进程
+     *
+     * @return 是否是主进程
+     */
+    public boolean isMainProcess() {
+        try {
+            Context context = getApplicationContext();
+            if (context == null) {
+                return false;
+            }
+            ActivityManager am = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE));
+            List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
+            String mainProcessName = context.getPackageName();
+            int myPid = Process.myPid();
+            for (ActivityManager.RunningAppProcessInfo info : runningAppProcesses) {
+                if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }
