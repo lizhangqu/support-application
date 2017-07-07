@@ -56,22 +56,36 @@ public class ApplicationCompat {
      * 获得Application
      *
      * @return Application
-     * @throws ClassNotFoundException    ClassNotFoundException
-     * @throws NoSuchMethodException     NoSuchMethodException
-     * @throws NoSuchFieldException      NoSuchFieldException
-     * @throws InvocationTargetException InvocationTargetException
-     * @throws IllegalAccessException    IllegalAccessException
+     * @throws NotMainThreadLocalException NotMainThreadLocalException
+     * @throws ClassNotFoundException      ClassNotFoundException
+     * @throws NoSuchMethodException       NoSuchMethodException
+     * @throws NoSuchFieldException        NoSuchFieldException
+     * @throws InvocationTargetException   InvocationTargetException
+     * @throws IllegalAccessException      IllegalAccessException
      */
-    private static Application getSystemApp() throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException, InvocationTargetException, IllegalAccessException {
+    private static Application getSystemApp() throws NotMainThreadLocalException, ClassNotFoundException, NoSuchMethodException, NoSuchFieldException, InvocationTargetException, IllegalAccessException {
         Class<?> cls = Class.forName("android.app.ActivityThread");
         Method declaredMethod = cls.getDeclaredMethod("currentActivityThread");
         Field declaredField = cls.getDeclaredField("mInitialApplication");
         declaredField.setAccessible(true);
-        Object object = declaredField.get(declaredMethod.invoke(null));
+        Object currentActivityThread = declaredMethod.invoke(null);
+        if (currentActivityThread == null && Thread.currentThread().getId() != Looper.getMainLooper().getThread().getId()) {
+            throw new NotMainThreadLocalException("you should get it from main thread");
+        }
+        Object object = declaredField.get(currentActivityThread);
         if (object instanceof Application) {
             return (Application) object;
         }
         return null;
+    }
+
+    /**
+     * 对于4.0-4.1的机型，从子线程中获取currentActivityThread抛出此异常，切换到主线程阻塞获取
+     */
+    private static class NotMainThreadLocalException extends IllegalStateException {
+        NotMainThreadLocalException(String s) {
+            super(s);
+        }
     }
 
     /**
@@ -107,12 +121,18 @@ public class ApplicationCompat {
             try {
                 if (sApplication == null) {
                     sApplication = getSystemApp();
-                    if (sApplication == null && Thread.currentThread().getId() != Looper.getMainLooper().getThread().getId()) {
-                        synchronized (LOCK) {
-                            //主线程直接获取
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            handler.post(new ApplicationGetter());
+
+                }
+            } catch (NotMainThreadLocalException e) {
+                if (sApplication == null) {
+                    synchronized (LOCK) {
+                        //主线程直接获取
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new ApplicationGetter());
+                        try {
                             LOCK.wait();
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
                         }
                     }
                 }
