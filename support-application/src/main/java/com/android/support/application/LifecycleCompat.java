@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * activity生命周期
+ * activity及app前后台生命周期
  *
  * @author lizhangqu
  * @version V1.0
@@ -47,10 +47,6 @@ public class LifecycleCompat implements Application.ActivityLifecycleCallbacks {
         void onStarted(Activity activity);
 
         void onStopped(Activity activity);
-
-        void onResumed(Activity activity);
-
-        void onPaused(Activity activity);
     }
 
     @Override
