@@ -1,4 +1,3 @@
-apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
@@ -53,146 +52,12 @@ def getSnapshotRepositoryPassword() {
     return hasProperty('SNAPSHOT_REPOSITORY_PASSWORD') ? SNAPSHOT_REPOSITORY_PASSWORD : readPropertyFromLocalProperties('SNAPSHOT_REPOSITORY_PASSWORD')
 }
 
-def getPomGroupId() {
-    return hasProperty('POM_GROUP') ? POM_GROUP : readPropertyFromLocalProperties('POM_GROUP')
-}
-
-def getPomArtifactId() {
-    return hasProperty('POM_ARTIFACT_ID') ? POM_ARTIFACT_ID : readPropertyFromLocalProperties('POM_ARTIFACT_ID')
-}
-
-def getPomVersion() {
-    return hasProperty('POM_VERSION') ? POM_VERSION : readPropertyFromLocalProperties('POM_VERSION')
-}
-
 def getBintrayUser() {
     return hasProperty('BINTRAY_USER') ? BINTRAY_USER : readPropertyFromLocalProperties('BINTRAY_USER')
 }
 
 def getBintrayKey() {
     return hasProperty('BINTRAY_APIKEY') ? BINTRAY_APIKEY : readPropertyFromLocalProperties('BINTRAY_APIKEY')
-}
-
-def getPomLicense() {
-    return hasProperty('POM_LICENSE') ? POM_LICENSE : readPropertyFromLocalProperties('POM_LICENSE')
-}
-
-def getPomLicenseUrl() {
-    return hasProperty('POM_LICENSE_URL') ? POM_LICENSE_URL : readPropertyFromLocalProperties('POM_LICENSE_URL')
-}
-
-def getPomWebURL() {
-    return hasProperty('POM_WEBSITE_URL') ? POM_WEBSITE_URL : readPropertyFromLocalProperties('POM_WEBSITE_URL')
-}
-
-def getPomVCSURL() {
-    return hasProperty('POM_VCS_URL') ? POM_VCS_URL : readPropertyFromLocalProperties('POM_VCS_URL')
-}
-
-def getPomIssueURL() {
-    return hasProperty('POM_ISSUE_URL') ? POM_ISSUE_URL : readPropertyFromLocalProperties('POM_ISSUE_URL')
-}
-
-def getPomDeveloperID() {
-    return hasProperty('POM_DEVELOPER_ID') ? POM_DEVELOPER_ID : readPropertyFromLocalProperties('POM_DEVELOPER_ID')
-}
-
-def getPomDeveloperName() {
-    return hasProperty('POM_DEVELOPER_NAME') ? POM_DEVELOPER_NAME : readPropertyFromLocalProperties('POM_DEVELOPER_NAME')
-}
-
-//must specific the version and group, and can't use def
-version = getPomVersion()
-group = getPomGroupId()
-
-//pom config
-def pomLicense = getPomLicense()
-def pomLicenseUrl = getPomLicenseUrl()
-def pomWebsiteUrl = getPomWebURL()
-def pomVcsUrl = getPomVCSURL()
-def pomIssueUrl = getPomIssueURL()
-def pomDeveloperID = getPomDeveloperID()
-def pomDeveloperName = getPomDeveloperName()
-
-//bintray username and key
-def bintrayUser = getBintrayUser()
-def bintrayKey = getBintrayKey()
-
-//install to local config
-install {
-    repositories {
-        mavenInstaller {
-            pom.project {
-                // This generates POM.xml with proper parameters
-                groupId = getPomGroupId()
-                artifactId = getPomArtifactId()
-                version = getPomVersion()
-
-                name getPomArtifactId()
-                url pomWebsiteUrl
-
-                scm {
-                    url pomVcsUrl
-                }
-
-                licenses {
-                    license {
-                        name pomLicense
-                        url pomLicenseUrl
-                    }
-                }
-
-                developers {
-                    developer {
-                        id pomDeveloperID
-                        name pomDeveloperName
-                    }
-                }
-            }
-        }
-    }
-}
-
-//uploadArchives config
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            pom.groupId = getPomGroupId()
-            pom.artifactId = getPomArtifactId()
-            pom.version = getPomVersion()
-
-            repository(url: getReleaseRepositoryUrl()) {
-                authentication(userName: getReleaseRepositoryUsername(), password: getReleaseRepositoryPassword())
-            }
-            snapshotRepository(url: getSnapshotRepositoryUrl()) {
-                authentication(userName: getSnapshotRepositoryUsername(), password: getSnapshotRepositoryPassword())
-            }
-
-            pom.project {
-                name getPomArtifactId()
-                url pomWebsiteUrl
-
-                scm {
-                    url pomVcsUrl
-                }
-
-                licenses {
-                    license {
-                        name pomLicense
-                        url pomLicenseUrl
-                    }
-                }
-
-                developers {
-                    developer {
-                        id pomDeveloperID
-                        name pomDeveloperName
-                    }
-                }
-            }
-
-        }
-    }
 }
 
 //force Java/JavaDoc encode with UTF-8
@@ -229,9 +94,9 @@ if (project.hasProperty("android")) {
         from sourceSets.main.allSource
     }
 
-    task javaDocJar(type: Jar, dependsOn: Javadoc) {
+    task javaDocJar(type: Jar, dependsOn: javadoc) {
         classifier = 'javadoc'
-        from javaDoc.getDestinationDir()
+        from javadoc.getDestinationDir()
     }
 
     artifacts {
@@ -240,11 +105,145 @@ if (project.hasProperty("android")) {
 
 }
 
+////must specific the version and group, and can't use def
+group = POM_GROUP
+version = POM_VERSION
+
+//if you need to custom, close the comment
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            groupId POM_GROUP
+//            artifactId POM_ARTIFACT_ID
+//            version POM_VERSION
+//
+//            if (project.hasProperty("android")) {
+//                artifact androidSourcesJar
+//                artifact androidJavaDocsJar
+//                // Tell maven to prepare the generated "*.aar" file for publishing
+//                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+//            } else {
+//                if (plugins.hasPlugin('war')) {
+//                    from components.web
+//                } else {
+//                    from components.java
+//                }
+//                artifact javaSourcesJar
+//                artifact javaDocJar
+//            }
+//        }
+//    }
+//}
+
+//install to local config
+install {
+    repositories {
+        mavenInstaller {
+            pom.project {
+                // This generates POM.xml with proper parameters
+                groupId = POM_GROUP
+                artifactId = POM_ARTIFACT_ID
+                version = POM_VERSION
+
+                name POM_ARTIFACT_ID
+
+                url POM_WEBSITE_URL
+
+                scm {
+                    url POM_VCS_URL
+                    connection POM_VCS_URL
+                    developerConnection POM_VCS_URL
+                }
+
+                licenses {
+                    license {
+                        name POM_LICENSE
+                        url POM_LICENSE_URL
+                    }
+                }
+
+                developers {
+                    developer {
+                        id POM_DEVELOPER_ID
+                        name POM_DEVELOPER_NAME
+                    }
+                }
+            }
+        }
+    }
+}
+
+//uploadArchives config
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = POM_GROUP
+            pom.artifactId = POM_ARTIFACT_ID
+            pom.version = POM_VERSION
+
+            repository(url: getReleaseRepositoryUrl()) {
+                authentication(userName: getReleaseRepositoryUsername(), password: getReleaseRepositoryPassword())
+            }
+            snapshotRepository(url: getSnapshotRepositoryUrl()) {
+                authentication(userName: getSnapshotRepositoryUsername(), password: getSnapshotRepositoryPassword())
+            }
+
+            pom.project {
+                name POM_ARTIFACT_ID
+
+                url POM_WEBSITE_URL
+
+                scm {
+                    url POM_VCS_URL
+                    connection POM_VCS_URL
+                    developerConnection POM_VCS_URL
+                }
+
+                licenses {
+                    license {
+                        name POM_LICENSE
+                        url POM_LICENSE_URL
+                    }
+                }
+
+                developers {
+                    developer {
+                        id POM_DEVELOPER_ID
+                        name POM_DEVELOPER_NAME
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+//bintray config
+bintray {
+    user = getBintrayUser()
+    key = getBintrayKey()
+    configurations = ['archives']
+
+    pkg {
+        repo = 'maven'
+        name = POM_ARTIFACT_ID
+        licenses = [POM_LICENSE]
+        websiteUrl = POM_WEBSITE_URL
+        vcsUrl = POM_VCS_URL
+        issueTrackerUrl = POM_ISSUE_URL
+        publicDownloadNumbers = true
+        publish = true
+    }
+}
+
+//must locate in the last
 afterEvaluate { project ->
 
     def installTask = project.tasks.findByName("install")
     def uploadArchivesTask = project.tasks.findByName("uploadArchives")
     def bintrayUploadTask = project.tasks.findByName("bintrayUpload")
+    def publishMavenPublicationToMavenLocalTask = project.tasks.findByName("publishMavenPublicationToMavenLocal")
+    def assembleTask = project.tasks.findByName("assemble")
 
     if (installTask) {
         //reset install task group form other to maven
@@ -266,24 +265,12 @@ afterEvaluate { project ->
         //reset bintrayUpload task group form other to maven
         bintrayUploadTask.group = 'maven'
     }
-}
 
-//bintray config
-bintray {
-    user = bintrayUser
-    key = bintrayKey
-    configurations = ['archives']
-
-    pkg {
-        repo = 'maven'
-        name = getPomArtifactId()
-        licenses = [pomLicense]
-        websiteUrl = pomWebsiteUrl
-        vcsUrl = pomVcsUrl
-        issueTrackerUrl = pomIssueUrl
-        publicDownloadNumbers = true
-        publish = true
+    //must use this way, if direct find the task we can't get the task
+    tasks.all { Task task ->
+        if (task.name.equalsIgnoreCase('publishMavenPublicationToMavenLocal')) {
+            task.dependsOn tasks.getByName('assemble')
+        }
     }
+
 }
-
-
