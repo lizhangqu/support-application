@@ -222,7 +222,7 @@ public class ApplicationCompat {
      *
      * @return 是否是debug构建包
      */
-    public static boolean isDebugAble() {
+    public static boolean isDebuggable() {
         try {
             PackageManager packageManager = getApplication().getPackageManager();
             PackageInfo packInfo = packageManager.getPackageInfo(getApplication().getPackageName(), 0);
@@ -233,4 +233,5 @@ public class ApplicationCompat {
         }
         return false;
     }
+
 }

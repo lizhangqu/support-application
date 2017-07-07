@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                         String appName = ApplicationCompat.getAppName();
                         String versionName = ApplicationCompat.getVersionName();
                         int versionCode = ApplicationCompat.getVersionCode();
-                        boolean isDebugAble = ApplicationCompat.isDebugAble();
+                        boolean isDebuggable = ApplicationCompat.isDebuggable();
 
                         Log.e("TAG", "threadName:" + name);
                         Log.e("TAG", "application:" + application);
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("TAG", "appName:" + appName);
                         Log.e("TAG", "versionName:" + versionName);
                         Log.e("TAG", "versionCode:" + versionCode);
-                        Log.e("TAG", "isDebugAble:" + isDebugAble);
+                        Log.e("TAG", "isDebuggable:" + isDebuggable);
                     }
                 };
                 ExecutorService executorService = Executors.newFixedThreadPool(8);

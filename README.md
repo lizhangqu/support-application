@@ -79,10 +79,10 @@ String versionName = ApplicationCompat.getVersionName();
 int versionCode = ApplicationCompat.getVersionCode();
 ```
 
-**DebugAble Or Not**
+**Debuggable Or Not**
 
 ```
-boolean isDebugAble = ApplicationCompat.isDebugAble();
+boolean isDebugAble = ApplicationCompat.isDebuggable();
 ```
 
 ### License
