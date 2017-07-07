@@ -3,6 +3,9 @@ package com.android.support.application.sample;
 import android.app.Application;
 import android.content.Context;
 
+import com.android.support.application.EnvironmentCompat;
+import com.android.support.application.LifecycleCompat;
+
 /**
  * 功能介绍
  *
@@ -40,6 +43,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        EnvironmentCompat.getInstance().onApplicationCreate(this, EnvironmentCompat.Env.DEVELOP);
+        LifecycleCompat.getInstance().onApplicationCreate(this);
 
         //this is ok
 
