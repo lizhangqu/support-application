@@ -3,7 +3,9 @@
  - support-application is a library which can get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
  - support-application is a library which can open the activity like url.
  - support-application is a library which can control the app develop environment global.
-
+ - support-application is a library which can get the application lifecycle(foreground/background), the activity lifecycle(onCreated/onStarted/onStopped/onDestroyed), the top activity in activity stack etc.
+ - each class in support-application is independent. so you need init each of them.
+ 
 ### Changelog
 
 See details in [CHANGELOG](https://github.com/lizhangqu/support-application/blob/master/CHANGELOG.md).
@@ -17,6 +19,8 @@ See sample [here on Github](https://github.com/lizhangqu/support-application/tre
 To run the sample application, simply clone this repository and use android studio to compile, install it on a connected device.
 
 ### Usage
+
+#### dependency
 
 **Latest Version**
 
@@ -43,6 +47,8 @@ dependencies {
     </dependency>
 </dependencies>
 ```
+
+#### ApplicationCompat
 
 **Get Application**
 
@@ -86,9 +92,11 @@ int versionCode = ApplicationCompat.getVersionCode();
 boolean isDebuggable = ApplicationCompat.isDebuggable();
 ```
 
-**Route Activity Like Url**
+#### RouteCompat
 
-add intent-filter to AndroidManifest.xml
+Route the Activity Like open the Url.
+
+**declare url information at intent-filter node in AndroidManifest.xml**
 
 ```
 <activity android:name=".SecondActivity">
@@ -106,7 +114,7 @@ add intent-filter to AndroidManifest.xml
 </activity>
 ```
 
-open the activity in code
+**open the activity in code like this**
 
 ```
 RouteUri routeUri = RouteUri.scheme("https")
@@ -117,7 +125,7 @@ RouteUri routeUri = RouteUri.scheme("https")
 RouteCompat.from(MainActivity.this).toUri(routeUri);
 ```
 
-get the url information in activity
+**get the url information in dest activity**
 
 ```
 Intent intent = getIntent();
