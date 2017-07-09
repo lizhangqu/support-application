@@ -48,7 +48,7 @@ public class App extends Application {
         EnvironmentCompat.getInstance().onApplicationCreate(this, EnvironmentCompat.Env.RELEASE);
         LifecycleCompat.getInstance().onApplicationCreate(this);
 
-        LifecycleCompat.getInstance().registerActivityLifecycleCallback(new LifecycleCompat.LifecycleCallback() {
+        LifecycleCompat.LifecycleCallback lifecycleCallback = new LifecycleCompat.LifecycleCallback() {
             @Override
             public void onCreated(Activity activity) {
                 Log.e("TAG", "onCreated:" + activity);
@@ -68,7 +68,9 @@ public class App extends Application {
             public void onStopped(Activity activity) {
                 Log.e("TAG", "onStopped:" + activity);
             }
-        });
+        };
+        LifecycleCompat.getInstance().registerActivityLifecycleCallback(lifecycleCallback);
+//        LifecycleCompat.getInstance().unregisterActivityLifecycleCallback(lifecycleCallback);
         //this is ok
 
 //        String name = Thread.currentThread().getName();

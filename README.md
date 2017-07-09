@@ -27,7 +27,7 @@ To run the sample application, simply clone this repository and use android stud
 [ ![Download](https://api.bintray.com/packages/lizhangqu/maven/support-application/images/download.svg) ](https://bintray.com/lizhangqu/maven/support-application/_latestVersion)
 
 
-**Gradle**
+**gradle**
 
 ```
 dependencies {
@@ -36,7 +36,7 @@ dependencies {
 }
 ```
 
-**Maven**
+**maven**
 
 ```
 <dependencies>
@@ -52,31 +52,31 @@ dependencies {
 
 Get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
 
-**Get Application**
+**get application**
 
 ```
 Application application = ApplicationCompat.getApplication();                   
 ```
 
-**Get Application Context**
+**get application context**
 
 ```
 Context context = ApplicationCompat.getApplicationContext();                   
 ```
 
-**Get Classloader**
+**get classloader**
 
 ```
 ClassLoader classLoader = ApplicationCompat.getClassLoader();              
 ```
 
-**Get The Apk AppName**
+**get the apk appName**
 
 ```
 String appName = ApplicationCompat.getAppName();
 ```
 
-**Get The Apk VersionName**
+**get the apk versionName**
 
 ```
 String versionName = ApplicationCompat.getVersionName();
@@ -88,7 +88,7 @@ String versionName = ApplicationCompat.getVersionName();
 int versionCode = ApplicationCompat.getVersionCode();
 ```
 
-**Debuggable Or Not**
+**debuggable or not**
 
 ```
 boolean isDebuggable = ApplicationCompat.isDebuggable();
@@ -194,6 +194,138 @@ AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
         })
         .create();
 dialog.show();
+```
+
+### LifecycleCompat
+
+ - get the activity lifecycle changed callback(onCreated/onStarted/onStopped/onDestroyed)
+ - get the application lifecycle changed broadcast(foreground/background)
+ - get the activity list count changed broadcast
+ - get the top activity in activity stack
+ - get launchedActivity count
+ - get launchedActivity list
+ - show dest activity in activity stack
+ 
+**init in application method named onCreate**
+
+```
+LifecycleCompat.getInstance().onApplicationCreate(this);
+```
+
+**get the top activity, launchedActivity count, launchedActivity list**
+
+```
+int launchedActivityCount = LifecycleCompat.getInstance().getLaunchedActivityCount();
+Activity topActivity = LifecycleCompat.getInstance().getTopActivity();
+List<WeakReference<Activity>> launchedActivityList = LifecycleCompat.getInstance().getLaunchedActivityList();
+
+Log.e("TAG", "launchedActivityCount:" + launchedActivityCount);
+Log.e("TAG", "topActivity:" + topActivity);
+
+if (launchedActivityList != null) {
+    for (WeakReference<Activity> activityWeakReference : launchedActivityList) {
+        if (activityWeakReference != null && activityWeakReference.get() != null) {
+            Log.e("TAG", "launchedActivity:" + activityWeakReference.get());
+        }
+    }
+}
+```
+
+**show dest activity in activity stack**
+
+```
+LifecycleCompat.getInstance().showActivity(MainActivity.class);
+```
+
+or use the class name
+
+```
+LifecycleCompat.getInstance().showActivity("com.android.support.application.sample.MainActivity");
+```
+
+
+**register/unregister activity lifecycle changed callback**
+
+```
+LifecycleCompat.LifecycleCallback lifecycleCallback = new LifecycleCompat.LifecycleCallback() {
+    @Override
+    public void onCreated(Activity activity) {
+        Log.e("TAG", "onCreated:" + activity);
+    }
+
+    @Override
+    public void onDestroyed(Activity activity) {
+        Log.e("TAG", "onDestroyed:" + activity);
+    }
+
+    @Override
+    public void onStarted(Activity activity) {
+        Log.e("TAG", "onStarted:" + activity);
+    }
+
+    @Override
+    public void onStopped(Activity activity) {
+        Log.e("TAG", "onStopped:" + activity);
+    }
+};
+LifecycleCompat.getInstance().registerActivityLifecycleCallback(lifecycleCallback);
+```
+
+if you need to unregister it, you need to call the method named unregisterActivityLifecycleCallback.
+
+```
+LifecycleCompat.getInstance().unregisterActivityLifecycleCallback(lifecycleCallback);
+```
+
+**get the application lifecycle changed broadcast**
+
+```
+private class ApplicationLifecycleChangedBroadcastReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        boolean isBackground = intent.getBooleanExtra(LifecycleCompat.EXTRA_LIFECYCLE_STATUS, false);
+        String packageName = intent.getStringExtra(LifecycleCompat.EXTRA_PACKAGE_NAME);
+        //judge packageName equal
+        if (TextUtils.equals(packageName, getApplicationContext().getPackageName())) {
+            if (isBackground) {
+                Log.e("TAG", "app is background");
+            } else {
+                Log.e("TAG", "app is foreground");
+            }
+        }
+    }
+}
+private ApplicationLifecycleChangedBroadcastReceiver mApplicationLifecycleChangedBroadcastReceiver = new ApplicationLifecycleChangedBroadcastReceiver();
+  
+//register broadcast receiver
+registerReceiver(mApplicationLifecycleChangedBroadcastReceiver, new IntentFilter(LifecycleCompat.ACTION_APPLICATION_LIFECYCLE_CHANGED));
+   
+//unregister broadcast receiver
+unregisterReceiver(mApplicationLifecycleChangedBroadcastReceiver);
+```
+
+**get the activity list count changed broadcast**
+
+```
+private class ActivityCountChangeBroadcastReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String packageName = intent.getStringExtra(LifecycleCompat.EXTRA_PACKAGE_NAME);
+        int activityCount = intent.getIntExtra(LifecycleCompat.EXTRA_ACTIVITY_COUNT, -1);
+        //judge packageName equal
+        if (TextUtils.equals(packageName, getApplicationContext().getPackageName())) {
+            Log.e("TAG", "activityCountChanged:" + activityCount);
+        }
+    }
+}
+
+private ActivityCountChangeBroadcastReceiver mActivityCountChangeBroadcastReceiver = new ActivityCountChangeBroadcastReceiver();
+
+//register broadcast receiver
+registerReceiver(mActivityCountChangeBroadcastReceiver, new IntentFilter(LifecycleCompat.ACTION_ACTIVITY_COUNT_CHANGED));
+
+//unregister broadcast receiver
+unregisterReceiver(mActivityCountChangeBroadcastReceiver);
 ```
 
 ## License
