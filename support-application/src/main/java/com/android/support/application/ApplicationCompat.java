@@ -250,7 +250,7 @@ public class ApplicationCompat {
      *
      * @return 是否是主进程
      */
-    public boolean isMainProcess() {
+    public static boolean isMainProcess() {
         try {
             Context context = getApplicationContext();
             if (context == null) {
