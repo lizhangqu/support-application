@@ -1,16 +1,16 @@
-### Support-Application
+## Support-Application
 
  - support-application is a library which can get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
  - support-application is a library which can open the activity like url.
- - support-application is a library which can control the app develop environment global.
+ - support-application is a library which can control the app develop environment globally.
  - support-application is a library which can get the application lifecycle(foreground/background), and the activity lifecycle(onCreated/onStarted/onStopped/onDestroyed), the top activity in activity stack etc.
- - each class in support-application is independent. so you need init each of them in method named onCreate in application if needed.
+ - each class in support-application is independent. so you need init each of them in application method named onCreate if needed.
  
-### Changelog
+## Changelog
 
 See details in [CHANGELOG](https://github.com/lizhangqu/support-application/blob/master/CHANGELOG.md).
 
-### Examples
+## Examples
 
 I have provided a sample.
 
@@ -18,9 +18,9 @@ See sample [here on Github](https://github.com/lizhangqu/support-application/tre
 
 To run the sample application, simply clone this repository and use android studio to compile, install it on a connected device.
 
-### Usage
+## Usage
 
-#### dependency
+### dependency
 
 **Latest Version**
 
@@ -48,7 +48,9 @@ dependencies {
 </dependencies>
 ```
 
-#### ApplicationCompat
+### ApplicationCompat
+
+Get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
 
 **Get Application**
 
@@ -92,7 +94,7 @@ int versionCode = ApplicationCompat.getVersionCode();
 boolean isDebuggable = ApplicationCompat.isDebuggable();
 ```
 
-#### RouteCompat
+### RouteCompat
 
 Route the Activity Like open the Url.
 
@@ -147,6 +149,53 @@ if (intent != null) {
 see more api in [RouteCompat.java](https://github.com/lizhangqu/support-application/blob/master/support-application/src/main/java/com/android/support/application/RouteCompat.java)
 
 
-### License
+### EnvironmentCompat
+
+Control the app's develop environment globally.
+
+**init in application method named onCreate**
+
+```
+EnvironmentCompat.getInstance().onApplicationCreate(this, EnvironmentCompat.Env.RELEASE);
+```
+
+or use Env.RELEASE for default
+
+```
+ EnvironmentCompat.getInstance().onApplicationCreate(this);
+```
+
+**get the env in app anywhere if you need**
+
+```
+EnvironmentCompat.Env env = EnvironmentCompat.getInstance().getEnv();
+```
+
+**change the env if you need**
+
+```
+String[] environments = {
+        EnvironmentCompat.Env.RELEASE.name(),
+        EnvironmentCompat.Env.PRE.name(),
+        EnvironmentCompat.Env.DEVELOP.name()
+};
+EnvironmentCompat.Env env = EnvironmentCompat.getInstance().getEnv();
+int ordinal = env.ordinal();
+AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+        .setTitle("Please Select Environment")
+        .setCancelable(true)
+        .setSingleChoiceItems(environments, ordinal, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EnvironmentCompat.Env env = EnvironmentCompat.Env.values()[which];
+                EnvironmentCompat.getInstance().changeEnv(getApplicationContext(), env);
+                dialog.dismiss();
+            }
+        })
+        .create();
+dialog.show();
+```
+
+## License
 
 support-application is under the BSD license. See the [LICENSE](https://github.com/lizhangqu/support-application/blob/master/LICENSE) file for details.

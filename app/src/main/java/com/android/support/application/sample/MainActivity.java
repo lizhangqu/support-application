@@ -96,9 +96,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String[] environments = {EnvironmentCompat.Env.RELEASE.name(),
+                String[] environments = {
+                        EnvironmentCompat.Env.RELEASE.name(),
                         EnvironmentCompat.Env.PRE.name(),
-                        EnvironmentCompat.Env.DEVELOP.name()};
+                        EnvironmentCompat.Env.DEVELOP.name()
+                };
                 EnvironmentCompat.Env env = EnvironmentCompat.getInstance().getEnv();
                 int ordinal = env.ordinal();
                 AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
