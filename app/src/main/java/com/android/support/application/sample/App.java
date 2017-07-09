@@ -43,7 +43,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        EnvironmentCompat.getInstance().onApplicationCreate(this, EnvironmentCompat.Env.DEVELOP);
+        EnvironmentCompat.getInstance().onApplicationCreate(this, EnvironmentCompat.Env.RELEASE);
         LifecycleCompat.getInstance().onApplicationCreate(this);
 
         //this is ok

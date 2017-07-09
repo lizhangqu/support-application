@@ -2,12 +2,15 @@ package com.android.support.application.sample;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
 import com.android.support.application.ApplicationCompat;
+import com.android.support.application.EnvironmentCompat;
 import com.android.support.application.RouteCompat;
 import com.android.support.application.RouteUri;
 
@@ -78,6 +81,39 @@ public class MainActivity extends AppCompatActivity {
                         .param("key1", "value1")
                         .fragment("1");
                 RouteCompat.from(MainActivity.this).toUri(routeUri);
+            }
+        });
+
+        findViewById(R.id.env).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EnvironmentCompat.Env env = EnvironmentCompat.getInstance().getEnv();
+                Log.e("TAG", "env:" + env);
+            }
+        });
+
+        findViewById(R.id.change_env).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String[] environments = {EnvironmentCompat.Env.RELEASE.name(),
+                        EnvironmentCompat.Env.PRE.name(),
+                        EnvironmentCompat.Env.DEVELOP.name()};
+                EnvironmentCompat.Env env = EnvironmentCompat.getInstance().getEnv();
+                int ordinal = env.ordinal();
+                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Please Select Environment")
+                        .setCancelable(true)
+                        .setSingleChoiceItems(environments, ordinal, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                EnvironmentCompat.Env env = EnvironmentCompat.Env.values()[which];
+                                EnvironmentCompat.getInstance().changeEnv(getApplicationContext(), env);
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+                dialog.show();
             }
         });
     }

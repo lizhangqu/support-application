@@ -20,4 +20,16 @@
         android:layout_height="wrap_content"
         android:text="route测试"/>
 
+    <Button
+        android:id="@+id/env"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="env测试"/>
+
+    <Button
+        android:id="@+id/change_env"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="change env测试"/>
+
 </LinearLayout>
