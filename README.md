@@ -22,7 +22,7 @@ To run the sample application, simply clone this repository and use android stud
 
 ### Dependency
 
-**latest Version**
+**latest version**
 
 [ ![Download](https://api.bintray.com/packages/lizhangqu/maven/support-application/images/download.svg) ](https://bintray.com/lizhangqu/maven/support-application/_latestVersion)
 
