@@ -30,6 +30,7 @@ package com.android.support.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Process;
 
 /**
  * 环境切换
@@ -78,13 +79,12 @@ public class EnvironmentCompat {
      *
      * @param context Context
      * @param env     需要切换到的环境
-     * @return 改变后的环境
      */
-    public Env changeEnv(Context context, Env env) {
+    public void changeEnv(Context context, Env env) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
         sharedPreferences.edit().clear().putString(KEY, env.name()).apply();
-        this.env = env;
-        return env;
+        int myPid = android.os.Process.myPid();
+        Process.killProcess(myPid);
     }
 
     /**
