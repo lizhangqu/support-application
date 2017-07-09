@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.android.support.application.ApplicationCompat;
+import com.android.support.application.RouteCompat;
+import com.android.support.application.RouteUri;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.application).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //线程中执行，覆盖部分系统使用ThreadLocal存储
@@ -66,5 +68,18 @@ public class MainActivity extends AppCompatActivity {
                 runnable.run();
             }
         });
+
+        findViewById(R.id.route).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RouteUri routeUri = RouteUri.scheme("https")
+                        .host("support.android.com")
+                        .path("support/application/second")
+                        .param("key1", "value1")
+                        .fragment("1");
+                RouteCompat.from(MainActivity.this).toUri(routeUri);
+            }
+        });
     }
+
 }
