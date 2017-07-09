@@ -25,3 +25,10 @@ version 0.0.4
 -------------
 
  - modify method isDebugAble to isDebuggable
+ 
+version 0.0.5
+-------------
+
+ - add EnvironmentCompat support
+ - add LifecycleCompat support
+ - add RouteCompat support
