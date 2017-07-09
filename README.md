@@ -3,7 +3,7 @@
  - support-application is a library which can get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
  - support-application is a library which can open the dest activity like url.
  - support-application is a library which can control the app develop environment globally.
- - support-application is a library which can get the application lifecycle(foreground/background), and the activity lifecycle(onCreated/onStarted/onStopped/onDestroyed), the top activity in activity stack etc.
+ - support-application is a library which can get the application lifecycle(foreground/background), the activity lifecycle(onCreated/onStarted/onStopped/onDestroyed), and the top activity in activity stack etc.
  - each class in support-application is independent. so you need init each of them in application method named onCreate if needed.
  
 ## Changelog
@@ -50,7 +50,7 @@ dependencies {
 
 ### ApplicationCompat
 
-Get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
+ApplicationCompat can get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
 
 **get application**
 
@@ -96,7 +96,7 @@ boolean isDebuggable = ApplicationCompat.isDebuggable();
 
 ### RouteCompat
 
-Route the Activity Like open the Url.
+RouteCompat can open the Activity like open the Url.
 
 **declare url information at intent-filter node in AndroidManifest.xml**
 
@@ -151,7 +151,7 @@ see more api in [RouteCompat.java](https://github.com/lizhangqu/support-applicat
 
 ### EnvironmentCompat
 
-Control the app's develop environment globally.
+EnvironmentCompat can control the app's develop environment globally.
 
 **init in application method named onCreate**
 
@@ -198,6 +198,8 @@ dialog.show();
 
 ### LifecycleCompat
 
+LifecycleCompat has these features
+
  - get the activity lifecycle changed callback(onCreated/onStarted/onStopped/onDestroyed)
  - get the application lifecycle changed broadcast(foreground/background)
  - get the activity list count changed broadcast
@@ -205,6 +207,7 @@ dialog.show();
  - get launchedActivity count
  - get launchedActivity list
  - show dest activity in activity stack
+ 
  
 **init in application method named onCreate**
 
