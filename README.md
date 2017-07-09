@@ -1,7 +1,8 @@
 ### Support-Application
 
  - support-application is a library which can get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
- - support-application is a library which can open the activity like url
+ - support-application is a library which can open the activity like url.
+ - support-application is a library which can control the app develop environment global.
 
 ### Changelog
 
