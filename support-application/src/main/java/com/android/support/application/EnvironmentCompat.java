@@ -27,6 +27,7 @@
 //OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.android.support.application;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -62,17 +63,30 @@ public class EnvironmentCompat {
     }
 
     /**
+     * application onCreate最前面调用，默认release环境
+     *
+     * @param application Application
+     */
+    public void onApplicationCreate(Application application) {
+        onApplicationCreate(application, Env.RELEASE);
+    }
+
+    /**
      * application onCreate最前面调用
      *
      * @param application Application
      * @param defaultEnv  默认环境
      */
     public void onApplicationCreate(Application application, Env defaultEnv) {
-        SharedPreferences sharedPreferences = application.getSharedPreferences(KEY, Context.MODE_PRIVATE);
-        String persistEnv = sharedPreferences.getString(KEY, defaultEnv.name());
-        this.env = Env.valueOf(persistEnv);
+        try {
+            SharedPreferences sharedPreferences = application.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+            String persistEnv = sharedPreferences.getString(KEY, defaultEnv.name());
+            this.env = Env.valueOf(persistEnv);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.env = Env.RELEASE;
+        }
     }
-
 
     /**
      * 改变环境，改变完成后建议杀进程
@@ -80,9 +94,17 @@ public class EnvironmentCompat {
      * @param context Context
      * @param env     需要切换到的环境
      */
+    @SuppressLint("ApplySharedPref")
     public void changeEnv(Context context, Env env) {
+        if (this.env == env) {
+            return;
+        }
+        //同步提交，保证写入
         SharedPreferences sharedPreferences = context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
-        sharedPreferences.edit().clear().putString(KEY, env.name()).apply();
+        sharedPreferences.edit().clear().putString(KEY, env.name()).commit();
+        //for remind
+        Throwable throwable = new Throwable("EnvironmentCompat will kill the process for applying the new environment.").fillInStackTrace();
+        throwable.printStackTrace();
         int myPid = android.os.Process.myPid();
         Process.killProcess(myPid);
     }
@@ -90,7 +112,7 @@ public class EnvironmentCompat {
     /**
      * 获取当前环境
      *
-     * @return
+     * @return 当前环境
      */
     public Env getEnv() {
         return env;
