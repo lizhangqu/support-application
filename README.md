@@ -1,7 +1,7 @@
 ### Support-Application
 
-support-application is a library which can get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
-
+ - support-application is a library which can get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
+ - support-application is a library which can open the activity like url
 
 ### Changelog
 
@@ -84,6 +84,59 @@ int versionCode = ApplicationCompat.getVersionCode();
 ```
 boolean isDebuggable = ApplicationCompat.isDebuggable();
 ```
+
+**Route Activity Like Url**
+
+add intent-filter to AndroidManifest.xml
+
+```
+<activity android:name=".SecondActivity">
+    <intent-filter android:priority="999">
+        <action android:name="android.intent.action.VIEW"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+
+        <data android:scheme="http"/>
+        <data android:scheme="https"/>
+        <data android:host="support.android.com"/>
+        <data android:path="/support/application/second"/>
+    </intent-filter>
+</activity>
+```
+
+open the activity in code
+
+```
+RouteUri routeUri = RouteUri.scheme("https")
+                        .host("support.android.com")
+                        .path("support/application/second")
+                        .param("key1", "value1")
+                        .fragment("1");
+RouteCompat.from(MainActivity.this).toUri(routeUri);
+```
+
+get the url information in activity
+
+```
+Intent intent = getIntent();
+if (intent != null) {
+    Uri data = getIntent().getData();
+    if (data != null) {
+        String host = data.getHost();
+        String path = data.getPath();
+        String param = data.getQueryParameter("key1");
+        String fragment = data.getFragment();
+        Log.e("TAG", "host:" + host);
+        Log.e("TAG", "path:" + path);
+        Log.e("TAG", "param:" + param);
+        Log.e("TAG", "fragment:" + fragment);
+    }
+}
+```
+
+see more api in [RouteCompat.java](https://github.com/lizhangqu/support-application/blob/master/support-application/src/main/java/com/android/support/application/RouteCompat.java)
+
 
 ### License
 
