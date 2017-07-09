@@ -3,8 +3,8 @@
  - support-application is a library which can get the information about the app like application, applicationContext, classloader, appName, versionName, versionCode, isDebugAble without context.
  - support-application is a library which can open the activity like url.
  - support-application is a library which can control the app develop environment global.
- - support-application is a library which can get the application lifecycle(foreground/background), the activity lifecycle(onCreated/onStarted/onStopped/onDestroyed), the top activity in activity stack etc.
- - each class in support-application is independent. so you need init each of them.
+ - support-application is a library which can get the application lifecycle(foreground/background), and the activity lifecycle(onCreated/onStarted/onStopped/onDestroyed), the top activity in activity stack etc.
+ - each class in support-application is independent. so you need init each of them in method named onCreate in application if needed.
  
 ### Changelog
 
