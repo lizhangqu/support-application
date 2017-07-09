@@ -108,6 +108,7 @@ if (project.hasProperty("android")) {
 ////must specific the version and group, and can't use def
 group = POM_GROUP
 version = POM_VERSION
+archivesBaseName = POM_ARTIFACT_ID
 
 //if you need to custom, close the comment
 //publishing {
