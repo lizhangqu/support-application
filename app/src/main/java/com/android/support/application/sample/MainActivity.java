@@ -118,6 +118,23 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+
+        findViewById(R.id.lifecycle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RouteUri routeUri = RouteUri.scheme("https")
+                        .host("support.android.com")
+                        .path("support/application/third");
+                RouteCompat.from(MainActivity.this).toUri(routeUri);
+            }
+        });
+
+        findViewById(R.id.finish).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
 }

@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -49,7 +50,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 2017-07-07 15:26
  */
 public class LifecycleCompat {
-    public static final String ACTION_ACTIVITY_LIST_CHANGED = "com.android.support.application.ACTIVITY_LIST_CHANGED";
+    public static final String ACTION_ACTIVITY_COUNT_CHANGED = "com.android.support.application.ACTIVITY_COUNT_CHANGED";
     public static final String ACTION_APPLICATION_LIFECYCLE_CHANGED = "com.android.support.application.APP_LIFECYCLE_CHANGED";
     public static final String EXTRA_ACTIVITY_COUNT = "activity_count";
     public static final String EXTRA_LIFECYCLE_STATUS = "lifecycle_status";
@@ -199,12 +200,22 @@ public class LifecycleCompat {
         return null;
     }
 
-
     public void showActivity(String activityName) {
         for (WeakReference<Activity> activityWeakReference : mActivities) {
             if (null != activityWeakReference.get()) {
                 Activity activity = activityWeakReference.get();
-                if (null != activity && !TextUtils.equals(activityName, activity.getLocalClassName())) {
+                if (null != activity && !TextUtils.equals(activityName, activity.getClass().getName())) {
+                    activity.finish();
+                }
+            }
+        }
+    }
+
+    public void showActivity(Class<? extends Activity> activityClass) {
+        for (WeakReference<Activity> activityWeakReference : mActivities) {
+            if (null != activityWeakReference.get()) {
+                Activity activity = activityWeakReference.get();
+                if (null != activity && !TextUtils.equals(activityClass.getName(), activity.getClass().getName())) {
                     activity.finish();
                 }
             }
@@ -230,13 +241,12 @@ public class LifecycleCompat {
                     }
                 }
             }
-
         }
     }
 
     private void sendActivityChangeBroadcast() {
         Intent intent = new Intent();
-        intent.setAction(ACTION_ACTIVITY_LIST_CHANGED);
+        intent.setAction(ACTION_ACTIVITY_COUNT_CHANGED);
         intent.putExtra(EXTRA_ACTIVITY_COUNT, mActivities.size());
         intent.putExtra(EXTRA_PACKAGE_NAME, mApplication.getPackageName());
         mApplication.sendBroadcast(intent);

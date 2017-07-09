@@ -30,6 +30,19 @@
                 <data android:path="/support/application/second"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ThirdActivity">
+            <intent-filter android:priority="999">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="support.android.com"/>
+                <data android:path="/support/application/third"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

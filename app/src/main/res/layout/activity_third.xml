@@ -6,42 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.android.support.application.sample.MainActivity">
-
-    <Button
-        android:id="@+id/application"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="application测试"/>
-
-    <Button
-        android:id="@+id/route"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="route测试"/>
-
-    <Button
-        android:id="@+id/env"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="env测试"/>
-
-    <Button
-        android:id="@+id/change_env"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="change env测试"/>
+    tools:context="com.android.support.application.sample.ThirdActivity">
 
     <Button
         android:id="@+id/lifecycle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="lifecycle测试"/>
+        android:text="lifecycle测试"
+        />
 
     <Button
-        android:id="@+id/finish"
+        android:id="@+id/show_activity_class"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="lifecycle onDestroy测试"/>
+        android:text="showActivty class测试"
+        />
+
+    <Button
+        android:id="@+id/show_activity_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="showActivty name测试"
+        />
+
+    <Button
+        android:id="@+id/open_new_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="open_new_activity测试"
+        />
+
 
 </LinearLayout>

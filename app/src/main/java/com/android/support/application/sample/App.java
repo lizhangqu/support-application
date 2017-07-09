@@ -1,7 +1,9 @@
 package com.android.support.application.sample;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.android.support.application.EnvironmentCompat;
 import com.android.support.application.LifecycleCompat;
@@ -46,6 +48,27 @@ public class App extends Application {
         EnvironmentCompat.getInstance().onApplicationCreate(this, EnvironmentCompat.Env.RELEASE);
         LifecycleCompat.getInstance().onApplicationCreate(this);
 
+        LifecycleCompat.getInstance().registerActivityLifecycleCallback(new LifecycleCompat.LifecycleCallback() {
+            @Override
+            public void onCreated(Activity activity) {
+                Log.e("TAG", "onCreated:" + activity);
+            }
+
+            @Override
+            public void onDestroyed(Activity activity) {
+                Log.e("TAG", "onDestroyed:" + activity);
+            }
+
+            @Override
+            public void onStarted(Activity activity) {
+                Log.e("TAG", "onStarted:" + activity);
+            }
+
+            @Override
+            public void onStopped(Activity activity) {
+                Log.e("TAG", "onStopped:" + activity);
+            }
+        });
         //this is ok
 
 //        String name = Thread.currentThread().getName();
