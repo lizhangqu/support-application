@@ -53,6 +53,17 @@ public class TagCompat {
     /**
      * 获取tag
      *
+     * @param view   View
+     * @param tagKey tag key
+     * @return tag value
+     */
+    public static Object getTag(View view, String tagKey) {
+        return getTag(view, tagKey, null);
+    }
+
+    /**
+     * 获取tag
+     *
      * @param view         View
      * @param tagKey       tag key
      * @param defaultValue 默认值

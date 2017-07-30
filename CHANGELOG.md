@@ -37,3 +37,8 @@ version 0.0.6
 -------------
 
  - add View Tag support
+
+version 0.0.7
+-------------
+
+ - add tag compat override method
