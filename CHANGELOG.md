@@ -32,3 +32,8 @@ version 0.0.5
  - add EnvironmentCompat support
  - add LifecycleCompat support
  - add RouteCompat support
+ 
+version 0.0.6
+-------------
+
+ - add View Tag support

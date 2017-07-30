@@ -331,6 +331,14 @@ registerReceiver(mActivityCountChangeBroadcastReceiver, new IntentFilter(Lifecyc
 unregisterReceiver(mActivityCountChangeBroadcastReceiver);
 ```
 
+### TagCompat
+
+```
+TagCompat.setTag(view, "key1", "value1");
+TagCompat.getTag(view, "key1", "defaultValue");
+TagCompat.containsTag(view, "key1");
+```
+
 ## License
 
 support-application is under the BSD license. See the [LICENSE](https://github.com/lizhangqu/support-application/blob/master/LICENSE) file for details.
