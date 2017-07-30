@@ -135,6 +135,10 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+//        TagCompat.setTag(view, "key1", "value1");
+//        TagCompat.getTag(view, "key1", "defaultValue");
+//        TagCompat.containsTag(view, "key1");
     }
 
 }
