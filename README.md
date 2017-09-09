@@ -331,6 +331,13 @@ registerReceiver(mActivityCountChangeBroadcastReceiver, new IntentFilter(Lifecyc
 unregisterReceiver(mActivityCountChangeBroadcastReceiver);
 ```
 
+**get the activity start count and create count**
+
+```
+LifecycleCompat.getInstance().getStartedCount();
+LifecycleCompat.getInstance().getCreatedCount();
+```
+
 ### TagCompat
 
 ```

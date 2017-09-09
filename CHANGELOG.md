@@ -42,3 +42,8 @@ version 0.0.7
 -------------
 
  - add tag compat override method
+
+version 0.0.8
+-------------
+
+ - add get start and create activity method

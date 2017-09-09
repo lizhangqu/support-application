@@ -35,7 +35,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -182,6 +181,14 @@ public class LifecycleCompat {
 
     public synchronized void unregisterActivityLifecycleCallback(LifecycleCallback activityLifecycleCallback) {
         this.mActivityLifecycleCallbacks.remove(activityLifecycleCallback);
+    }
+
+    public int getCreatedCount() {
+        return mCreationCount.get();
+    }
+
+    public int getStartedCount() {
+        return mStartCount.get();
     }
 
     public int getLaunchedActivityCount() {
