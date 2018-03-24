@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.support.application.ApplicationCompat;
 import com.android.support.application.EnvironmentCompat;
 import com.android.support.application.LifecycleCompat;
 
@@ -45,6 +46,14 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ApplicationCompat.getApplication();
+            }
+        }).start();
+        ApplicationCompat.getApplication();
+
         EnvironmentCompat.getInstance().onApplicationCreate(this, EnvironmentCompat.Env.RELEASE);
         LifecycleCompat.getInstance().onApplicationCreate(this);
 

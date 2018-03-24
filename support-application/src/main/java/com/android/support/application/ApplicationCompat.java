@@ -102,11 +102,13 @@ public class ApplicationCompat {
         @Override
         public void run() {
             try {
+                if (sApplication != null) {
+                    return;
+                }
                 sApplication = getSystemApp();
             } catch (Throwable e) {
                 e.printStackTrace();
-            }
-            synchronized (LOCK) {
+            } finally {
                 LOCK.notify();
             }
         }
@@ -121,28 +123,25 @@ public class ApplicationCompat {
         if (sApplication != null) {
             return sApplication;
         }
-        synchronized (ApplicationCompat.class) {
-            try {
-                if (sApplication == null) {
-                    sApplication = getSystemApp();
-
-                }
-            } catch (NotMainThreadLocalException e) {
-                if (sApplication == null) {
-                    synchronized (LOCK) {
-                        //主线程直接获取
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new ApplicationGetter());
-                        try {
-                            LOCK.wait();
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
-                        }
+        try {
+            sApplication = getSystemApp();
+        } catch (NotMainThreadLocalException e) {
+            if (sApplication == null) {
+                synchronized (LOCK) {
+                    if (sApplication != null) {
+                        return sApplication;
+                    }
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new ApplicationGetter());
+                    try {
+                        LOCK.wait(5000);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
                     }
                 }
-            } catch (Throwable e) {
-                e.printStackTrace();
             }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         return sApplication;
     }
