@@ -47,3 +47,4 @@ version 0.0.8
 -------------
 
  - add get start and create activity method
+ - fix anr
