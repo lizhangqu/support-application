@@ -109,7 +109,9 @@ public class ApplicationCompat {
             } catch (Throwable e) {
                 e.printStackTrace();
             } finally {
-                LOCK.notifyAll();
+                synchronized (LOCK) {
+                    LOCK.notifyAll();
+                }
             }
         }
     }
